@@ -1,0 +1,33 @@
+{$DOMAIN} {
+	encode gzip zstd
+
+	log {
+		output stdout
+		format json
+	}
+
+	# Directus API (REST + auth) — remove o prefixo /api antes de encaminhar
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy directus:8055
+	}
+
+	# Directus Data Studio (painel administrativo)
+	handle /admin/* {
+		reverse_proxy directus:8055
+	}
+
+	# Uploads de arquivos do Directus
+	# ATENÇÃO: o Vite (frontend) deve usar build.assetsDir != "assets" (ex.: "static")
+	# para não colidir com esta rota de uploads.
+	handle /assets/* {
+		reverse_proxy directus:8055
+	}
+
+	# Build estático do React + SPA fallback
+	handle {
+		root * /srv/frontend
+		try_files {path} /index.html
+		file_server
+	}
+}

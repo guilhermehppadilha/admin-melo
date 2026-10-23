@@ -96,7 +96,7 @@ O desenvolvimento é **acelerado por IA** (DeepSeek no VSCode), sempre com **rev
 |---|---|---|
 | Frontend | React + Vite + TypeScript | React 19, Vite 6 |
 | Boilerplate | **Shadcn Dashboard** (`shadcndashboard/shadcndashboard`) | latest estável |
-| UI | Tailwind CSS + shadcn/ui (Radix UI) | Tailwind v4, shadcn/ui v3 |
+| UI | Tailwind CSS + shadcn/ui (Base UI) | Tailwind v4, shadcn/ui v3 |
 | Estado global | Zustand | 5.x |
 | Roteamento | React Router | 7.x |
 | Data fetching | TanStack Query | 5.x |
@@ -182,7 +182,7 @@ intranet/
 │   │   └── main.tsx
 │   ├── package.json
 │   ├── vite.config.ts
-│   ├── tailwind.config.ts
+│   ├── postcss.config.js              # Tailwind v4 (sem tailwind.config.ts)
 │   └── tsconfig.json
 ├── directus/
 │   ├── extensions/
@@ -634,7 +634,7 @@ Contrato inviolável.
 12. ❌ Não adicionar testes automatizados de performance ou segurança.
 13. ❌ Não modificar componentes do shadcn/ui em `src/components/ui/`.
 14. ❌ Não criar componentes React do zero quando o Shadcn Dashboard já oferece equivalente.
-15. ❌ Não usar Headless UI (stack do Dashin) — a stack oficial é Radix UI / shadcn/ui.
+15. ❌ Não usar Headless UI (stack do Dashin) — a stack oficial é Base UI / shadcn/ui.
 16. ❌ Não criar conector customizado para Directus se o SDK oficial resolver.
 
 ### 12.3 Formato de resposta do agente
