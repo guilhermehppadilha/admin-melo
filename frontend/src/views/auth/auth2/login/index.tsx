@@ -1,16 +1,47 @@
+import { useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+
 import { Card } from "@/components/ui/card";
-import { Link } from "react-router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import FullLogo from "src/layouts/full/shared/logo/FullLogo";
+import { useAuthStore } from "@/stores/auth";
 import SocialButtons from "../../authforms/social-buttons";
 
-
-
-
 const BoxedLogin = () => {
+  const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await login(email.trim(), password);
+      navigate("/", { replace: true });
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Não foi possível entrar. Tente novamente.";
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-accent  px-4">
@@ -21,7 +52,7 @@ const BoxedLogin = () => {
           </div>
 
           <SocialButtons />
-          <form className="space-y-6 w-full">
+          <form className="space-y-6 w-full" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label
@@ -35,6 +66,9 @@ const BoxedLogin = () => {
                   type="email"
                   placeholder="Enter Your Email"
                   required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                 />
               </div>
               <div className="space-y-1.5">
@@ -49,14 +83,14 @@ const BoxedLogin = () => {
                   type="password"
                   placeholder="Enter your password"
                   required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                 />
               </div>
               <div className="flex items-center justify-between text-sm flex-wrap gap-4">
                 <div className="flex items-center space-x-3">
-                  <Checkbox
-                    id="remember"
-                    className={"cursor-pointer"}
-                  />
+                  <Checkbox id="remember" className={"cursor-pointer"} />
                   <Label
                     htmlFor="remember"
                     className="text-muted-foreground font-normal cursor-pointer leading-0"
@@ -74,9 +108,11 @@ const BoxedLogin = () => {
             </div>
             <Button
               size="lg"
+              type="submit"
               className="w-full rounded-lg"
+              disabled={isSubmitting}
             >
-              Sign in
+              {isSubmitting ? "Signing in..." : "Sign in"}
             </Button>
           </form>
           {/* Footer */}

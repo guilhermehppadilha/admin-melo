@@ -15,11 +15,18 @@ import { cn } from "src/lib/utils";
 import { Mailbox } from 'lucide-react';
 
 import { profileDD } from "./data";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import avatar from '@/assets/images/profile/avtar.webp';
 import Buynow from '@/assets/images/backgrounds/sidebarbuynow.svg';
+import { useAuthStore } from "@/stores/auth";
 export default function ProfileSheet() {
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <Sheet>
@@ -123,8 +130,8 @@ export default function ProfileSheet() {
 
               <Button
                 variant="secondary"
-                render={<Link to="/auth/auth2/login" />}
                 className="text-primary"
+                onClick={() => void handleLogout()}
               >
                 Log Out
               </Button>
